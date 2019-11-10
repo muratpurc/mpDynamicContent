@@ -283,10 +283,6 @@
         }
     }, window);
 
-    Con.Loader.get(['{$backendHtmlPath}scripts/jquery/jquery-ui.js', '{$backendHtmlPath}styles/jquery/jquery-ui.css'], function() {
-        initialize_mpDynamicContent_{$muid}();
-    }, window);
-
 {/if}
 
 })(jQuery);
