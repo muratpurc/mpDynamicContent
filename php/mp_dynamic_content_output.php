@@ -5,9 +5,8 @@
  * @package     Module
  * @subpackage  mpDynamicContent
  * @author      Murat Purc <murat@purc.de>
- * @copyright   Copyright (c) 2013 Murat Purc (http://www.purc.de)
+ * @copyright   Copyright (c) 2013-2019 Murat Purc (http://www.purc.de)
  * @license     http://www.gnu.org/licenses/gpl-2.0.html - GNU General Public License, version 2
- * @version     $Id: mp_dynamic_content_output.php 59 2013-12-03 14:43:38Z murat $
  */
 
 
@@ -67,7 +66,7 @@ if ($oModule->isBackendEditMode) {
 
 // Get content type data
 $contentTypeData = $oModule->getContentTypeData();
-//echo "<pre>\$contentTypeData: " . print_r($contentTypeData, true) . "</pre>";
+#echo "<pre>\$contentTypeData: " . print_r($contentTypeData, true) . "</pre>";
 
 // Use smarty template to output module code
 $tpl = cSmartyFrontend::getInstance();
