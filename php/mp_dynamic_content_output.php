@@ -7,16 +7,14 @@
  * @author      Murat Purc <murat@purc.de>
  * @copyright   Copyright (c) 2013 Murat Purc (http://www.purc.de)
  * @license     http://www.gnu.org/licenses/gpl-2.0.html - GNU General Public License, version 2
- * @version     $Id: mp_dynamic_content_output.php 56 2013-12-02 13:54:17Z murat $
+ * @version     $Id: mp_dynamic_content_output.php 59 2013-12-03 14:43:38Z murat $
  */
 
 
 // Includes
 cInclude('module', 'includes/class.module.mpdynamiccontent.php');
 
-$idart = cRegistry::getArticleId(true);
 $client = cRegistry::getClientId(true);
-$lang = cRegistry::getLanguageId(true);
 
 // Module configuration
 $aModuleConfiguration = array(
@@ -26,9 +24,9 @@ $aModuleConfiguration = array(
     'container' => $cCurrentContainer,
     'db' => cRegistry::getDb(),
     'cfg' => cRegistry::getConfig(),
-    'idart' => $idart,
+    'idart' => cRegistry::getArticleId(true),
     'client' => $client,
-    'lang' => $lang,
+    'lang' => cRegistry::getLanguageId(true),
     'idartlang' => cRegistry::getArticleLanguageId(true),
     'isBackendEditMode' => cRegistry::isBackendEditMode(),
     'moduleHandler' => new cModuleHandler($cCurrentModule),
@@ -71,7 +69,7 @@ if ($oModule->isBackendEditMode) {
 $contentTypeData = $oModule->getContentTypeData();
 //echo "<pre>\$contentTypeData: " . print_r($contentTypeData, true) . "</pre>";
 
-// use smarty template to output header text
+// Use smarty template to output module code
 $tpl = cSmartyFrontend::getInstance();
 
 // NOTE: We have to add the jQuery UI library in backend for CONTENIDO < 4.9.3

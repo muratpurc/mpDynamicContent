@@ -7,7 +7,7 @@
  * @author      Murat Purc <murat@purc.de>
  * @copyright   Copyright (c) 2013 Murat Purc (http://www.purc.de)
  * @license     http://www.gnu.org/licenses/gpl-2.0.html - GNU General Public License, version 2
- * @version     $Id: class.module.mpdynamiccontent.php 56 2013-12-02 13:54:17Z murat $
+ * @version     $Id: class.module.mpdynamiccontent.php 62 2013-12-05 10:19:03Z murat $
  */
 
 if (!defined('CON_FRAMEWORK')) {
@@ -229,18 +229,23 @@ class ModuleMpDynamicContent {
 
         $contentTypeData = array();
         // Generate content types
-        $ocType = new cTypeGenerator();
+        $typeGen = new cTypeGenerator();
         $counter = 0;
         foreach ($contentTypes as $item) {
-            $contentTypeData[] = array(
+            $itemData = array(
                 'typeid' => $this->typeid + $counter,
                 'type' => $item->type,
-                'value' => stripslashes($ocType->getGeneratedCmsTag($item->type, $this->typeid + $counter)),
+                'value' => stripslashes($typeGen->getGeneratedCmsTag($item->type, $this->typeid + $counter)),
                 'label' => $item->label,
                 'userdefined' => stripslashes($item->userdefined),
                 'online' => isset($item->online) ? $item->online : 1,
                 'template' => $this->moduleHandler->getTemplatePath($item->template),
             );
+            $addData = $this->_getAdditionalContentTypeProperties($item->type, $this->typeid + $counter);
+            if (count($addData) > 0) {
+                $itemData['properties'] = $addData;
+            }
+            $contentTypeData[] = $itemData;
             $counter++;
         }
 
@@ -249,9 +254,11 @@ class ModuleMpDynamicContent {
 
     /**
      * Returns list templates usable to render a configured Content-Type item.
+     * @param  string  $sortBy  Name of property to sort by, either 'description' or 'template'.
      * @return  array
      */
-    public function getTemplates() {
+    public function getTemplates($sortBy = 'description') {
+        $sortBy = (in_array($sortBy, array('description', 'template'))) ? $sortBy : 'description';
         $templates = array();
 
         $files = $this->moduleHandler->getAllFilesFromDirectory('template');
@@ -275,7 +282,51 @@ class ModuleMpDynamicContent {
             }
         }
 
+        // Do the sorting...
+        $arrSort = array();
+        foreach ($templates as $p => $tpl) {
+            $arrSort[$p] = $tpl[$sortBy];
+        }
+        $arrSort = array_map('strtolower', $arrSort);
+        array_multisort($arrSort, SORT_ASC, SORT_STRING, $templates);
+
         return $templates;
+    }
+
+    /**
+     * Collects additional properties for Content-Types.
+     * At the moment it deals only with CMS_IMGEDITOR, gets related CMS_IMG and CMS_IMGDESCR
+     * Content-Types, extracts the informations and returns them back
+     * @param string $type
+     * @param string $typeid
+     * @return array
+     */
+    protected function _getAdditionalContentTypeProperties($type, $typeid) {
+        $addData = array();
+
+        // Special treatment for Content-Type CMS_IMGEDITOR!
+        // We need CMS_IMG and CMS_IMGDESCR by using the same typeid to extract the
+        // information about selected image and the description...
+        if ('CMS_IMGEDITOR' == $type) {
+            $typeGen = new cTypeGenerator();
+            $img = $typeGen->getGeneratedCmsTag('CMS_IMG', $typeid);
+            if (!empty($img)) {
+                $imgDescr = $typeGen->getGeneratedCmsTag('CMS_IMGDESCR', $typeid);
+
+                $clientCfg = cRegistry::getClientConfig($this->client);
+                $file = str_replace($clientCfg['upl']['htmlpath'], $clientCfg['upl']['path'], $img);
+                $dimensions = getimagesize($file);
+
+                $addData = array(
+                    'src' => $img,
+                    'descr' => $imgDescr,
+                    'width' => $dimensions[0],
+                    'height' => $dimensions[1],
+                );
+            }
+        }
+
+        return $addData;
     }
 
     /**
