@@ -274,7 +274,7 @@
 {else}
 
     Con.Loader.get(['{$backendHtmlPath}scripts/jquery/jquery-ui.js', '{$backendHtmlPath}styles/jquery/jquery-ui.css'], function() {
-        // TODO Murat Purc - Loader may call the callback twice!
+        // TODO Murat Purç - Loader may call the callback twice!
         if ($.type(window.bMpDynamicContent_{$muid}_initialized) === 'undefined') {
             window.bMpDynamicContent_{$muid}_initialized = true;
             setTimeout(function() {

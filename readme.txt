@@ -130,4 +130,4 @@ SCHLUSSBEMERKUNG
 
 Benutzung des Moduls auf eigene Gefahr!
 
-Murat Purc, murat@purc.de
+Murat Purç, murat@purc.de
