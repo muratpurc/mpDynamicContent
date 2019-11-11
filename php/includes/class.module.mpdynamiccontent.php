@@ -219,6 +219,7 @@ class ModuleMpDynamicContent {
 
         // Get stored data
         $contentTypes = $this->getStoredContentTypeContent();
+        $this->_printInfo($contentTypes, 'raw contentTypes');
 
         if (!empty($contentTypes)) {
             $contentTypes = @json_decode($contentTypes);
