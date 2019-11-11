@@ -18,7 +18,6 @@ if (!defined('CON_FRAMEWORK')) {
  */
 class ModuleMpDynamicContent {
 
-
     /**
      * Unique module id (module id + container)
      * @var  string
@@ -54,7 +53,6 @@ class ModuleMpDynamicContent {
      * @param  array  $translations  Associative translations list
      */
     public function __construct(array $options, array $translations = array()) {
-
         foreach ($options as $k => $v) {
             $this->$k = $v;
         }
