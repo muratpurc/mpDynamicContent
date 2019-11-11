@@ -112,8 +112,8 @@ class ModuleMpDynamicContent {
 
     /**
      * Returns the checked attribute sub string usable for checkboxes.
-     * @param string $name Configuration item name
-     * @return string
+     * @param  string  $name  Configuration item name
+     * @return  string
      */
     public function getCheckedAttribute($name) {
         if (isset($this->$name) && '' !== $this->$name) {
@@ -125,8 +125,8 @@ class ModuleMpDynamicContent {
 
     /**
      * Returns the id attribute value by concatenating passed name with the module uid.
-     * @param string $name
-     * @return string
+     * @param  string  $name
+     * @return  string
      */
     public function getIdValue($name) {
         return $name . '_' . $this->getUid();
@@ -134,7 +134,7 @@ class ModuleMpDynamicContent {
 
     /**
      * Returns the module uid (module id + container).
-     * @return string
+     * @return  string
      */
     public function getUid() {
         return $this->_uid;
@@ -166,19 +166,45 @@ class ModuleMpDynamicContent {
     }
 
     /**
-     * Returns the previous stored content entries data structure
-     * @return  string
+     * Returns the stored content entries data structure
+     * @param  bool  $asObject  Flag to convert the structure to a plain object and return it back
+     * @return  string|object
      */
-    public function getStoredContentTypeContent() {
+    public function getStoredContentTypeContent($asObject = false) {
         if (!$this->typeid) {
-            return '';
+            return ($asObject) ? new stdClass() : '';
         }
 
         // Get stored data
         $art = new cApiArticleLanguage();
         $art->loadByArticleAndLanguageId($this->idart, $this->lang);
         $content = (string) $art->getContent($this->type, $this->typeid);
+
+        if ($asObject) {
+            $content = $this->jsonStringToObject($content);
+        }
+
         return $content;
+    }
+
+    /**
+     * Converts the given JSON string to a plain object (stdClass)
+     * @param  string  $str
+     * @return  stdClass
+     */
+    public function jsonStringToObject($str) {
+        if (!empty($str)) {
+            $str = @json_decode($str);
+            if (!is_object($str)) {
+                $str = (object) $str;
+            }
+        }
+
+        if (!is_object($str)) {
+            $str = new stdClass();
+        }
+
+        return $str;
     }
 
     /**
@@ -188,7 +214,6 @@ class ModuleMpDynamicContent {
      */
     public function getSupportedContentTypes() {
         $contentTypes = array();
-
         $supported = $this->supportedContentTypes;
         $notSupported = $this->notSupportedContentTypes;
         $cApiTypeColl = new cApiTypeCollection();
@@ -217,20 +242,14 @@ class ModuleMpDynamicContent {
 
         // Get stored data
         $contentTypes = $this->getStoredContentTypeContent();
+        $contentTypesObj = $this->jsonStringToObject($contentTypes);
         $this->_printInfo($contentTypes, 'raw contentTypes');
-
-        if (!empty($contentTypes)) {
-            $contentTypes = @json_decode($contentTypes);
-            if (!is_object($contentTypes)) {
-                $contentTypes = (object) $contentTypes;
-            }
-        }
 
         $contentTypeData = array();
         // Generate content types
         $typeGen = new cTypeGenerator();
         $counter = 0;
-        foreach ($contentTypes as $item) {
+        foreach ($contentTypesObj as $item) {
             $itemData = array(
                 'typeid' => $this->typeid + $counter,
                 'type' => $item->type,
@@ -295,9 +314,9 @@ class ModuleMpDynamicContent {
      * Collects additional properties for Content-Types.
      * At the moment it deals only with CMS_IMGEDITOR, gets related CMS_IMG and CMS_IMGDESCR
      * Content-Types, extracts the information and returns them back
-     * @param string $type
-     * @param string $typeid
-     * @return array
+     * @param  string  $type
+     * @param  string  $typeid
+     * @return  array
      */
     protected function _getAdditionalContentTypeProperties($type, $typeid) {
         $addData = array();
