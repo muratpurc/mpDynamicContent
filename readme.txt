@@ -124,9 +124,11 @@ CHANGELOG
 ################################################################################
 MPDYNAMICCONTENT MODUL LINKS
 
-mpDynamicContent im CONTENIDO Forum unter Module 4.9.x:
+CONTENIDO Forum unter "CONTENIDO 4.9 -> Module und Plugins":
 http://forum.contenido.org/viewtopic.php?t=34753
 
+CONTENIDO Forum unter "CONTENIDO 4.10 -> Module und Plugins":
+https://forum.contenido.org/viewtopic.php?t=43770
 
 ################################################################################
 SCHLUSSBEMERKUNG
