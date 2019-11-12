@@ -107,6 +107,10 @@ Jeder Content-Typ Eintrag enthält 4 konfigurierbare Felder.
 ################################################################################
 CHANGELOG
 
+2019-11-12 mpDynamicContent 0.1.3 (für CONTENIDO 4.9.x - 4.10.x)
+    * bugfix: Mehrfachen Aufruf des Con.Loader callbacks unterbinden
+    * change: Verwendung von unterstützten default Content-Typen, wenn Einstellung nicht gesetzt
+
 2013-12-05 mpDynamicContent 0.1.2 (für CONTENIDO 4.9.x)
     * bugfix: Besseres Handling für das Laden von jQuery UI im Backend
     * bugfix: Anzeige des ausgewählten Bildes im Backend in der Editor-Ansicht
