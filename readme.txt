@@ -1,4 +1,4 @@
-CONTENIDO Modul mpDynamicContent 0.1.2 für CONTENIDO 4.9.x – 4.10.x
+CONTENIDO Modul mpDynamicContent für CONTENIDO CMS
 
 ################################################################################
 TOC (Table of contents)
