@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module>
-    <name>mp_dynamic_content</name>
-    <description>mpDynamicContent is a module which provides adding of dynamic Content-Types to the current article&#13;
-Author: Murat Purç &lt;murat@purc.de&gt;&#13;
-Link: http://www.purc.de/playground-cms_contenido_4.9-modul_mpdynamiccontent_-_dynamische_content-typen-a.133.html
+<module><name>mp_dynamic_content</name><description>mpDynamicContent is a module which provides adding of dynamic Content-Types to the current article.&#13;
 &#13;
+Author: Murat Purç &amp;lt;murat@purc.de&amp;gt;&#13;
+Link: https://github.com/purcaholic/mpDynamicContent&#13;
 Link: http://forum.contenido.org/viewtopic.php?t=34753&#13;
-Version: 0.1.2</description>
-    <type>content</type>
-    <alias>mp_dynamic_content</alias>
-</module>
+Version: 0.1.2</description><type>content</type><alias>mp_dynamic_content</alias></module>

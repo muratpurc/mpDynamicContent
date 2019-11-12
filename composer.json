@@ -1,0 +1,21 @@
+{
+    "name": "purcaholic/mpDynamicContent",
+    "type": "contenido-cms-module",
+    "description": "Dynamic content module for CONTENIDO CMS",
+    "keywords": [
+        "CONTENIDO",
+        "module",
+        "content-type"
+    ],
+    "homepage": "http://www.purc.de",
+    "authors": [
+        {
+            "name": "Murat Purç",
+            "role": "Developer"
+        }
+    ],
+    "license": ["GPL-2.0-or-later"],
+    "require-dev": {
+        "phpcompatibility/php-compatibility": "^9.3"
+    }
+}

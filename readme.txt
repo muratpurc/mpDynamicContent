@@ -1,4 +1,4 @@
-CONTENIDO Modul mpDynamicContent 0.1.2 für CONTENIDO 4.9.x
+CONTENIDO Modul mpDynamicContent 0.1.2 für CONTENIDO 4.9.x – 4.10.x
 
 ################################################################################
 TOC (Table of contents)
@@ -17,7 +17,7 @@ Das Modul mpDynamicContent erlaubt das Einbinden von beliebigen Content-Typen
 (z. B. CMS_HTMLHEAD, CMS_HTML, CMS_IMGEDITOR, usw.) in einen Container.
 
 Damit lassen sich dynamisch mehrere Inhalte basierend auf Content-Typen in einem
-Layout ausgeben. Die Konfiguration kann direkt über die Editor-Ansicht des 
+Layout ausgeben. Die Konfiguration kann direkt über die Editor-Ansicht des
 Artikels vorgenommen werden.
 
 Standardmäßig werden alle vorhandenen Content-Typen unterstützt, Ausnahmen gibt
@@ -31,12 +31,12 @@ Es ist auch möglich, zu jedem Content-Typ ein Template auszuwählen.
 ################################################################################
 INSTALLATION/VERWENDUNG
 
-Die im Modulpackage enthaltenen Dateien/Sourcen sind wie im Folgenden beschrieben 
+Die im Modulpackage enthaltenen Dateien/Sourcen sind wie im Folgenden beschrieben
 zu installieren.
-Die Pfade zu den Sourcen (CSS, JS und Templates) können von Projekt zu Projekt 
-unterschiedlich sein und sind bei Bedarf anzupassen. 
-Bei der Installationsbeschreibung wird davon ausgegangen, dass CONTENIDO in das 
-DocumentRoot-Verzeichnis eines Webservers installiert wurde und das 
+Die Pfade zu den Sourcen (CSS, JS und Templates) können von Projekt zu Projekt
+unterschiedlich sein und sind bei Bedarf anzupassen.
+Bei der Installationsbeschreibung wird davon ausgegangen, dass CONTENIDO in das
+DocumentRoot-Verzeichnis eines Webservers installiert wurde und das
 Mandantenverzeichnis "cms/" ist.
 
 1.) Modulinstallation:
@@ -63,7 +63,9 @@ Content-Typen konfigurieren. Mehrere Werte sind mit Komma zu trennen:
 Typ:  mp_dynamic_content
 Name: supported_content_types
 Wert: CMS_HEAD,CMS_HTML,CMS_HTMLHEAD,CMS_IMGEDITOR,CMS_LINKEDITOR
- 
+
+Ist die Einstellung nicht gesetzt, so wird dafür per default folgender Wert verwendet:
+CMS_HEAD,CMS_HTML,CMS_HTMLHEAD,CMS_IMGEDITOR,CMS_LINKEDITOR
 
 b.) Basiseinstellungen (im Popup Dialog):
 
@@ -78,7 +80,7 @@ c.) Content-Typ Einstellungen (im Popup Dialog):
 
 Jeder Content-Typ Eintrag enthält 4 konfigurierbare Felder.
 
-- Beschreibung: Angabe der Beschreibung zum Content-Typ, wenn angegeben wird
+- Beschreibung: Angabe der Beschreibung zum Content-Typ, wenn angegeben, wird
   es im Backend in der Editor-Ansicht als label-Element dargestellt
 
 - Content-Typ: Auswahl des zu verwendenden Content-Typen
@@ -97,8 +99,8 @@ Jeder Content-Typ Eintrag enthält 4 konfigurierbare Felder.
   class-Attribut. Im Template hat man Zugriff auf den Wert mit "$content.userdefined".
 
 - Aktionen:
-  - Online status: Content-Typ lassen sich online/offline stellen, dabei werde die Elemente
-  mit dem status offline bei der Ausgabe ausgelassen. Diese Inhalte können aber
+  - Online Status: Content-Typ lassen sich online/offline stellen, dabei werde die Elemente
+  mit dem Status offline bei der Ausgabe ausgelassen. Diese Inhalte können aber
   immer noch über die Suche im Frontend gefunden werden.
 
 
@@ -117,9 +119,6 @@ CHANGELOG
 
 ################################################################################
 MPDYNAMICCONTENT MODUL LINKS
-
-mpDynamicContent Modul für CONTENIDO CMS 4.9.x:
-http://www.purc.de/playground-cms_contenido_4.9-modul_mpdynamiccontent_-_dynamische_content-typen-a.133.html
 
 mpDynamicContent im CONTENIDO Forum unter Module 4.9.x:
 http://forum.contenido.org/viewtopic.php?t=34753
