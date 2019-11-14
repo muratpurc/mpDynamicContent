@@ -1,4 +1,4 @@
-CONTENIDO Modul mpDynamicContent für CONTENIDO CMS
+CONTENIDO CMS Modul mpDynamicContent zum dynamischen Einbinden von beliebigen Content-Typen
 
 ################################################################################
 TOC (Table of contents)
