@@ -69,27 +69,19 @@ class Module {
     ];
 
     /**
-     * Module translations
-     * @var  array
-     */
-    protected $_i18n = [];
-
-    /**
      * Constructor, sets some properties
      * @param array $options Associative options array, entries will be assigned
      *                          to member variables.
-     * @param array $translations Associative translations list
      * @throws \cDbException
      * @throws \cException
      */
-    public function __construct(array $options, array $translations = []) {
+    public function __construct(array $options) {
         foreach ($options as $k => $v) {
             $this->$k = $v;
         }
 
         $this->_validate();
 
-        $this->_i18n = $translations;
         $this->_uid = $this->idmod . '_' . $this->container;
 
         $this->typeid = (int) $this->_getProperty('typeid');
