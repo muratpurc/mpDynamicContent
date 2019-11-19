@@ -44,7 +44,6 @@ $aModuleConfiguration = array(
 
 // Create module class instance
 $oModule = new \Purc\MpDynamicContent\Module($aModuleConfiguration);
-echo 'fooooo';
 
 $contentTypes = '';
 $supportedContentTypes = [];
