@@ -24,20 +24,25 @@
             {literal}
 
             <style type="text/css">
-            .ui-widget-mp-dynamic-content {font-size:11px;}
-            .ui-dialog .ui-dialog-content.mpDynamicContentDialogForm {position:relative;}
-            .ui-dialog .ui-dialog-titlebar-close span {font-size:0;}
-            .mpDynamicContent .content_type_sublabel {font-size:11px;}
-            .mpDynamicContentDialogForm .content {height:100%; border-collapse:collapse; display:table;}
-            .mpDynamicContentDialogForm h3 {margin:0.3em 0;}
-            .mpDynamicContentDialogForm .contentTypeList th {text-align:left;}
-            .mpDynamicContentDialogForm .info {vertical-align:middle; cursor:pointer;}
-            .mpDynamicContentDialogForm .text {width:94px; margin-right:5px;}
-            .mpDynamicContentDialogForm .add {margin:0.6em 0;cursor:pointer;}
-            .mpDynamicContentDialogForm .add img {vertical-align:middle;}
-            .mpDynamicContentDialogForm .dynamicContentItem .select {width:144px; margin-right:5px;}
-            .mpDynamicContentDialogForm .dynamicContentItem .action {vertical-align:middle; cursor:pointer;}
-            .mpDynamicContentDialogForm .actionBtn {height:25px; margin-top:10px; display:table-row; text-align:right; vertical-align: bottom;}
+                .ui-widget-mp-dynamic-content {font-size: 11px;}
+                .ui-dialog .ui-dialog-content.mpDynamicContentDialogForm {position: relative;}
+                .ui-dialog .ui-dialog-titlebar-close span {font-size: 0;}
+                .ui-state-default {border: none !important;}
+                .mpDynamicContent .content_type_sublabel {font-size: 80%; border-top: none; border-right: none;}
+                .mpDynamicContentDialogForm .content {height: 100%; border-collapse: collapse; display: table; float: none; width: 100%; background-color: #fff;}
+                .mpDynamicContentDialogForm .content hr {margin: 10px 0;}
+                .mpDynamicContentDialogForm .content img {vertical-align: middle; cursor: pointer; max-width: none; display: inline;}
+                .mpDynamicContentDialogForm h3 {margin: 0.3em 0;}
+                .mpDynamicContentDialogForm .contentTypeList th {text-align: left;}
+                .mpDynamicContentDialogForm .contentTypeList td {cursor: move; padding: 4px 2px;}
+                .mpDynamicContentDialogForm .info {vertical-align: middle; cursor: pointer;}
+                .mpDynamicContentDialogForm .text {width: 94px; margin-right: 5px; cursor: auto; background-color: #fff; border: 1px solid #000; line-height: normal;}
+                .mpDynamicContentDialogForm .add {margin: 0.6em 0; cursor: pointer; display: inline-block;}
+                .mpDynamicContentDialogForm .add img {vertical-align: middle;}
+                .mpDynamicContentDialogForm .dynamicContentItem .select {width: 144px; margin-right: 5px;}
+                .mpDynamicContentDialogForm .dynamicContentItem .action {vertical-align: middle; cursor: pointer;}
+                .mpDynamicContentDialogForm .actionBtn {height: 25px; margin-top: 10px; display: table-row; text-align: right; vertical-align: bottom;}
+                .mpDynamicContentDialogForm .actionBtn input {background-color: #ddd; margin-left: 5px;}
             </style>
 
             {/literal}
