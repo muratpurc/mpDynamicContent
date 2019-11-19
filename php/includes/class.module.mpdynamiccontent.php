@@ -15,6 +15,24 @@ if (!defined('CON_FRAMEWORK')) {
 
 /**
  * CONTENIDO module class for mpDynamicContent
+ *
+ * @property boolean debug
+ * @property string name
+ * @property int idmod
+ * @property int container
+ * @property cDb db
+ * @property array cfg
+ * @property int idart
+ * @property int client
+ * @property int lang
+ * @property int idartlang
+ * @property boolean isBackendEditMode
+ * @property cModuleHandler moduleHandler
+ * @property cApiPropertyCollection propertyColl
+ * @property string type  The Content-Type
+ * @property int typeid
+ * @property string[] supportedContentTypes
+ * @property string notSupportedContentTypes
  */
 class ModuleMpDynamicContent {
 
@@ -29,7 +47,7 @@ class ModuleMpDynamicContent {
      * Not all properties are covered here, some will be added via constructor! 
      * @var  array
      */
-    protected $_properties = array(
+    protected $_properties = [
         'debug' => false,
         'name' => 'mpDynamicContent',
         'idmod' => 0,
@@ -38,13 +56,13 @@ class ModuleMpDynamicContent {
         'cfg' => null,
         'client' => 0,
         'lang' => 0,
-    );
+    ];
 
     /**
      * Module translations
      * @var  array
      */
-    protected $_i18n = array();
+    protected $_i18n = [];
 
     /**
      * Constructor, sets some properties
@@ -52,7 +70,7 @@ class ModuleMpDynamicContent {
      *                          to member variables.
      * @param  array  $translations  Associative translations list
      */
-    public function __construct(array $options, array $translations = array()) {
+    public function __construct(array $options, array $translations = []) {
         foreach ($options as $k => $v) {
             $this->$k = $v;
         }
@@ -62,7 +80,7 @@ class ModuleMpDynamicContent {
         $this->_i18n = $translations;
         $this->_uid = $this->idmod . '_' . $this->container;
 
-        $this->typeid = (int) $this->propertyColl->getValue('idmod', $this->idmod, 'container_' . $this->container , 'typeid', '');
+        $this->typeid = (int) $this->_getProperty('typeid');
     }
 
     /**
@@ -148,7 +166,7 @@ class ModuleMpDynamicContent {
         $contentTypeIdField = 'contenttypeid-' . $this->getUid();
         if (isset($post[$contentTypeIdField])) {
             $typeid = $post[$contentTypeIdField];
-            $this->propertyColl->setValue('idmod', $this->idmod, 'container_' . $this->container , 'typeid', $typeid);
+            $this->_setProperty('typeid', $typeid);
             $this->typeid = (int) $typeid;
         }
         $this->_printInfo($this->typeid, 'typeid');
@@ -213,7 +231,7 @@ class ModuleMpDynamicContent {
      * @return  array
      */
     public function getSupportedContentTypes() {
-        $contentTypes = array();
+        $contentTypes = [];
         $supported = $this->supportedContentTypes;
         $notSupported = $this->notSupportedContentTypes;
         $cApiTypeColl = new cApiTypeCollection();
@@ -237,7 +255,7 @@ class ModuleMpDynamicContent {
      */
     public function getContentTypeData() {
         if (!$this->typeid) {
-            return array();
+            return [];
         }
 
         // Get stored data
@@ -245,12 +263,12 @@ class ModuleMpDynamicContent {
         $contentTypesObj = $this->jsonStringToObject($contentTypes);
         $this->_printInfo($contentTypes, 'raw contentTypes');
 
-        $contentTypeData = array();
+        $contentTypeData = [];
         // Generate content types
         $typeGen = new cTypeGenerator();
         $counter = 0;
         foreach ($contentTypesObj as $item) {
-            $itemData = array(
+            $itemData = [
                 'typeid' => $this->typeid + $counter,
                 'type' => $item->type,
                 'value' => stripslashes($typeGen->getGeneratedCmsTag($item->type, $this->typeid + $counter)),
@@ -258,7 +276,7 @@ class ModuleMpDynamicContent {
                 'userdefined' => stripslashes($item->userdefined),
                 'online' => isset($item->online) ? $item->online : 1,
                 'template' => $this->moduleHandler->getTemplatePath($item->template),
-            );
+            ];
             $addData = $this->_getAdditionalContentTypeProperties($item->type, $this->typeid + $counter);
             if (count($addData) > 0) {
                 $itemData['properties'] = $addData;
@@ -276,8 +294,8 @@ class ModuleMpDynamicContent {
      * @return  array
      */
     public function getTemplates($sortBy = 'description') {
-        $sortBy = (in_array($sortBy, array('description', 'template'))) ? $sortBy : 'description';
-        $templates = array();
+        $sortBy = (in_array($sortBy, ['description', 'template'])) ? $sortBy : 'description';
+        $templates = [];
 
         $files = $this->moduleHandler->getAllFilesFromDirectory('template');
         $templatesPath = $this->moduleHandler->getTemplatePath();
@@ -292,15 +310,15 @@ class ModuleMpDynamicContent {
                 } else {
                     $descr = $parts['basename'];
                 }
-                $templates[] = array(
+                $templates[] = [
                     'template' => $parts['basename'],
                     'description' => $descr
-                );
+                ];
             }
         }
 
         // Do the sorting...
-        $arrSort = array();
+        $arrSort = [];
         foreach ($templates as $p => $tpl) {
             $arrSort[$p] = $tpl[$sortBy];
         }
@@ -319,7 +337,7 @@ class ModuleMpDynamicContent {
      * @return  array
      */
     protected function _getAdditionalContentTypeProperties($type, $typeid) {
-        $addData = array();
+        $addData = [];
 
         // Special treatment for Content-Type CMS_IMGEDITOR!
         // We need CMS_IMG and CMS_IMGDESCR by using the same typeid to extract the
@@ -334,12 +352,12 @@ class ModuleMpDynamicContent {
                 $file = str_replace($clientCfg['upl']['htmlpath'], $clientCfg['upl']['path'], $img);
                 $dimensions = getimagesize($file);
 
-                $addData = array(
+                $addData = [
                     'src' => $img,
                     'descr' => $imgDescr,
                     'width' => $dimensions[0],
                     'height' => $dimensions[1],
-                );
+                ];
             }
         }
 
@@ -347,7 +365,26 @@ class ModuleMpDynamicContent {
     }
 
     /**
-     * Simple debugger, print preformatted text, if debugging is enabled
+     * Returns the module property by its name.
+     * @param  string  $name  Property name
+     * @param  string  $default  Default value
+     * @return  mixed
+     */
+    protected function _getProperty($name, $default = '') {
+        return $this->propertyColl->getValue('idmod', $this->idmod, 'container_' . $this->container , $name, $default);
+    }
+
+    /**
+     * Sets the module property by its name.
+     * @param  string  $name  Property name
+     * @param  string  $value  Value
+     */
+    protected function _setProperty($name, $value) {
+        $this->propertyColl->setValue('idmod', $this->idmod, 'container_' . $this->container , $name, $value);
+    }
+
+    /**
+     * Simple debugger, prints preformatted text, if debugging is enabled
      * @param  mixed  $var
      * @param  mixed  $label
      */

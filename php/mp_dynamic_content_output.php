@@ -45,8 +45,8 @@ $aModuleConfiguration = array(
 $oModule = new ModuleMpDynamicContent($aModuleConfiguration);
 
 $contentTypes = '';
-$supportedContentTypes = array();
-$allTemplates = array();
+$supportedContentTypes = [];
+$allTemplates = [];
 
 // Save content entries only in backend edit mode
 if ($oModule->isBackendEditMode) {
@@ -77,6 +77,7 @@ $tpl->assign('isBackendEditMode', $oModule->isBackendEditMode);
 $tpl->assign('backendHtmlPath', cRegistry::getBackendUrl());
 $tpl->assign('muid', $oModule->getUid());
 $tpl->assign('typeid', $oModule->typeid);
+$tpl->assign('debug', $oModule->debug);
 
 $tpl->assign('LBL_DYNAMIC_CONTENT', mi18n("LBL_DYNAMIC_CONTENT"));
 $tpl->assign('BTN_DYNAMIC_CONTENT_TITLE', mi18n("BTN_DYNAMIC_CONTENT_TITLE"));
