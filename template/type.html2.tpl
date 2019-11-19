@@ -7,8 +7,8 @@
     - $debug (boolean) Debug flag
 *}
 {if $isBackendEditMode == true && $content.label}
-<label class="content_type_label">{$content.label}{if $debug} <span class="mpDynamicContentDbg">- {$content.type}[{$content.typeid}]</span>{/if}</label>
+    <label class="content_type_label">{$content.label}{if $debug} <span class="mpDynamicContentDbg">- {$content.type}[{$content.typeid}]</span>{/if}</label>
 {/if}
 <div class="mpDynamicContentHtml2">
-{$content.value}
+    {$content.value}
 </div>
