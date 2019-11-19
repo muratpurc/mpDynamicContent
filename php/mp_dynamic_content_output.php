@@ -25,6 +25,7 @@ $aModuleConfiguration = array(
     'cfg' => cRegistry::getConfig(),
     'idart' => cRegistry::getArticleId(true),
     'client' => $client,
+    'clientCfg' => cRegistry::getClientConfig($client),
     'lang' => cRegistry::getLanguageId(true),
     'idartlang' => cRegistry::getArticleLanguageId(true),
     'isBackendEditMode' => cRegistry::isBackendEditMode(),
@@ -42,7 +43,8 @@ $aModuleConfiguration = array(
 //##echo "<pre>" . print_r($aModuleConfiguration, true) . "</pre>";
 
 // Create module class instance
-$oModule = new ModuleMpDynamicContent($aModuleConfiguration);
+$oModule = new \Purc\MpDynamicContent\Module($aModuleConfiguration);
+echo 'fooooo';
 
 $contentTypes = '';
 $supportedContentTypes = [];

@@ -1,4 +1,13 @@
 <?php
+
+namespace Purc\MpDynamicContent;
+
+use \cApiArticleLanguage;
+use \cApiTypeCollection;
+use \cTypeGenerator;
+use \stdClass;
+use \SplFileObject;
+
 /**
  * CONTENIDO module class for mpDynamicContent
  *
@@ -20,21 +29,22 @@ if (!defined('CON_FRAMEWORK')) {
  * @property string name
  * @property int idmod
  * @property int container
- * @property cDb db
+ * @property \cDb db
  * @property array cfg
  * @property int idart
  * @property int client
+ * @property array clientCfg
  * @property int lang
  * @property int idartlang
  * @property boolean isBackendEditMode
- * @property cModuleHandler moduleHandler
- * @property cApiPropertyCollection propertyColl
+ * @property \cModuleHandler moduleHandler
+ * @property \cApiPropertyCollection propertyColl
  * @property string type  The Content-Type
  * @property int typeid
  * @property string[] supportedContentTypes
- * @property string notSupportedContentTypes
+ * @property string[] notSupportedContentTypes
  */
-class ModuleMpDynamicContent {
+class Module {
 
     /**
      * Unique module id (module id + container)
@@ -44,7 +54,7 @@ class ModuleMpDynamicContent {
 
     /**
      * Module properties structure.
-     * Not all properties are covered here, some will be added via constructor! 
+     * Not all properties are covered here, some will be added via constructor!
      * @var  array
      */
     protected $_properties = [
@@ -66,9 +76,11 @@ class ModuleMpDynamicContent {
 
     /**
      * Constructor, sets some properties
-     * @param  array  $options  Associative options array, entries will be assigned
+     * @param array $options Associative options array, entries will be assigned
      *                          to member variables.
-     * @param  array  $translations  Associative translations list
+     * @param array $translations Associative translations list
+     * @throws \cDbException
+     * @throws \cException
      */
     public function __construct(array $options, array $translations = []) {
         foreach ($options as $k => $v) {
@@ -84,28 +96,31 @@ class ModuleMpDynamicContent {
     }
 
     /**
-     * Magic getter, see PHP doc...
+     * @param $name
+     * @return mixed|null
      */
     public function __get($name) {
         return (isset($this->_properties[$name])) ? $this->_properties[$name] : null;
     }
 
     /**
-     * Magic setter, see PHP doc...
+     * @param $name
+     * @param $value
      */
     public function __set($name, $value) {
         $this->_properties[$name] = $value;
     }
 
     /**
-     * Magic method, see PHP doc...
+     * @param $name
+     * @return bool
      */
     public function __isset($name) {
         return (isset($this->_properties[$name]));
     }
 
     /**
-     * Magic method, see PHP doc...
+     * @param $name
      */
     public function __unset($name) {
         if (isset($this->_properties[$name])) {
@@ -160,7 +175,10 @@ class ModuleMpDynamicContent {
 
     /**
      * Saves the send content entries data structure
-     * @param  array  $post  $_POST array
+     * @param array $post $_POST array
+     * @throws \cDbException
+     * @throws \cException
+     * @throws \cInvalidArgumentException
      */
     public function saveContentEntries(array $post) {
         $contentTypeIdField = 'contenttypeid-' . $this->getUid();
@@ -185,8 +203,10 @@ class ModuleMpDynamicContent {
 
     /**
      * Returns the stored content entries data structure
-     * @param  bool  $asObject  Flag to convert the structure to a plain object and return it back
-     * @return  string|object
+     * @param bool $asObject Flag to convert the structure to a plain object and return it back
+     * @return string|object
+     * @throws \cDbException
+     * @throws \cException
      */
     public function getStoredContentTypeContent($asObject = false) {
         if (!$this->typeid) {
@@ -228,7 +248,10 @@ class ModuleMpDynamicContent {
     /**
      * Returns list of supported Content-Types.
      * Returns either entries defined in property $this->supportedContentTypes or all Content-Types.
-     * @return  array
+     * @return array
+     * @throws \cDbException
+     * @throws \cException
+     * @throws \cInvalidArgumentException
      */
     public function getSupportedContentTypes() {
         $contentTypes = [];
@@ -252,6 +275,8 @@ class ModuleMpDynamicContent {
      * Loops through stored Content-Types entries data structure and generates the
      * cms tag for each entry.
      * @return  array
+     * @throws \cDbException
+     * @throws \cException
      */
     public function getContentTypeData() {
         if (!$this->typeid) {
@@ -318,12 +343,7 @@ class ModuleMpDynamicContent {
         }
 
         // Do the sorting...
-        $arrSort = [];
-        foreach ($templates as $p => $tpl) {
-            $arrSort[$p] = $tpl[$sortBy];
-        }
-        $arrSort = array_map('strtolower', $arrSort);
-        array_multisort($arrSort, SORT_ASC, SORT_STRING, $templates);
+        $templates = $this->_sortTemplates($templates, $sortBy);
 
         return $templates;
     }
@@ -332,9 +352,11 @@ class ModuleMpDynamicContent {
      * Collects additional properties for Content-Types.
      * At the moment it deals only with CMS_IMGEDITOR, gets related CMS_IMG and CMS_IMGDESCR
      * Content-Types, extracts the information and returns them back
-     * @param  string  $type
-     * @param  string  $typeid
+     * @param string $type
+     * @param string $typeid
      * @return  array
+     * @throws \cDbException
+     * @throws \cException
      */
     protected function _getAdditionalContentTypeProperties($type, $typeid) {
         $addData = [];
@@ -347,9 +369,7 @@ class ModuleMpDynamicContent {
             $img = $typeGen->getGeneratedCmsTag('CMS_IMG', $typeid);
             if (!empty($img)) {
                 $imgDescr = $typeGen->getGeneratedCmsTag('CMS_IMGDESCR', $typeid);
-
-                $clientCfg = cRegistry::getClientConfig($this->client);
-                $file = str_replace($clientCfg['upl']['htmlpath'], $clientCfg['upl']['path'], $img);
+                $file = str_replace($this->clientCfg['upl']['htmlpath'], $this->clientCfg['upl']['path'], $img);
                 $dimensions = getimagesize($file);
 
                 $addData = [
@@ -365,10 +385,29 @@ class ModuleMpDynamicContent {
     }
 
     /**
+     * Sorts the template list by the sortBy parameter
+     * @param array $templates
+     * @param string $sortBy
+     * @return array
+     */
+    protected function _sortTemplates(array $templates, $sortBy) {
+        $arrSort = [];
+        foreach ($templates as $p => $tpl) {
+            $arrSort[$p] = $tpl[$sortBy];
+        }
+        $arrSort = array_map('strtolower', $arrSort);
+        array_multisort($arrSort, SORT_ASC, SORT_STRING, $templates);
+
+        return $templates;
+    }
+
+    /**
      * Returns the module property by its name.
-     * @param  string  $name  Property name
-     * @param  string  $default  Default value
+     * @param string $name Property name
+     * @param string $default Default value
      * @return  mixed
+     * @throws \cDbException
+     * @throws \cException
      */
     protected function _getProperty($name, $default = '') {
         return $this->propertyColl->getValue('idmod', $this->idmod, 'container_' . $this->container , $name, $default);
@@ -376,8 +415,11 @@ class ModuleMpDynamicContent {
 
     /**
      * Sets the module property by its name.
-     * @param  string  $name  Property name
-     * @param  string  $value  Value
+     * @param string $name Property name
+     * @param string $value Value
+     * @throws \cDbException
+     * @throws \cException
+     * @throws \cInvalidArgumentException
      */
     protected function _setProperty($name, $value) {
         $this->propertyColl->setValue('idmod', $this->idmod, 'container_' . $this->container , $name, $value);
