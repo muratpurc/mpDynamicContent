@@ -10,7 +10,7 @@ Layout ausgeben. Die Konfiguration kann direkt über die Editor-Ansicht des
 Artikels vorgenommen werden.
 
 Standardmäßig werden alle vorhandenen Content-Typen unterstützt, Ausnahmen gibt
-es für `CMS_IMG`, `CMS_IMGDESCR, `CMS_LINK`, `CMS_LINKTARGET`, `CMS_LINKDESCR`. Dafür
+es für `CMS_IMG`, `CMS_IMGDESCR`, `CMS_LINK`, `CMS_LINKTARGET`, `CMS_LINKDESCR`. Dafür
 gibt es die neuen Content-Typen `CMS_IMGEDITOR` und `CMS_LINKEDITOR`, die die
 bekannte Funktionalität übernehmen.
 
