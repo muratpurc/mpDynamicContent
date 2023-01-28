@@ -1,5 +1,5 @@
 {
-    "name": "purcaholic/mp-dynamic-content",
+    "name": "purc/mp-dynamic-content",
     "type": "contenido-cms-module",
     "description": "Dynamic content module for CONTENIDO CMS",
     "keywords": [
@@ -7,7 +7,7 @@
         "module",
         "content-type"
     ],
-    "homepage": "http://www.purc.de",
+    "homepage": "https://www.purc.de",
     "authors": [
         {
             "name": "Murat Purç",
