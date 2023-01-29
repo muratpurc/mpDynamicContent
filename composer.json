@@ -4,6 +4,7 @@
     "description": "Dynamic content module for CONTENIDO CMS",
     "keywords": [
         "CONTENIDO",
+        "php",
         "module",
         "content-type"
     ],
@@ -11,9 +12,13 @@
     "authors": [
         {
             "name": "Murat Purç",
-            "role": "Developer"
+            "email": "murat@purc.de",
+            "homepage": "https://www.purc.de"
         }
     ],
+    "require": {
+        "php": ">=7.0"
+    },
     "license": ["GPL-2.0-or-later"],
     "require-dev": {
         "phpcompatibility/php-compatibility": "^9.3"
