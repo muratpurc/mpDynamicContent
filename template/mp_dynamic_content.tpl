@@ -4,7 +4,7 @@
 
     {if $isBackendEditMode == true}
         {* Load/Output styles only once in current page *}
-        {if $jQueryUIStylesLoaded == false}
+        {if isset($jQueryUIStylesLoaded) && $jQueryUIStylesLoaded == false}
             {* This is a special treatment for CONTENIDO < 4.9.3 *}
             {if $versionLowerThan493 == true}
 
@@ -130,7 +130,7 @@
             // ####################################################################
             // Functions
 
-            // Helper function to convert JSON to it's string representation
+            // Helper function to convert JSON to its string representation
             var _jsonStringify = typeof JSON !== 'undefined' ? JSON.stringify : function(obj) {
                 var arr = [];
                 $.each(obj, function(key, val) {
@@ -161,7 +161,7 @@
                     return;
                 }
 
-                // Stringify them and set form form fields value
+                // Stringify them and set form fields value
                 $types.val(_jsonStringify(entries));
                 //##console.log(entries);
                 //##console.log(_jsonStringify(entries));
