@@ -17,7 +17,7 @@
     <label class="content_type_label content_type_sublabel">- {$content.label}{if $debug} <span class="mpDynamicContentDbg">- {$content.type}[{$content.typeid}]</span>{/if}</label>
 {/if}
 
-{if $content.properties|@count > 0}
+{if isset($content.properties) && $content.properties|@count > 0}
     <div class="mpDynamicContentImgeditor"><img src="{$content.properties.src}" alt="{$content.properties.descr|escape}" /></div>
 {/if}
 {if $isBackendEditMode == true}
