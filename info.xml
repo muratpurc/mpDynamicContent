@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module><name>mp_dynamic_content</name><description>mpDynamicContent is a module which provides adding of dynamic Content-Types to the current article.&#13;
+<module><name>mp_dynamic_content</name><description>mpDynamicContent is a module which provides the feature to add dynamic Content-Types to the current article.&#13;
 &#13;
-Author: Murat Purç &lt;murat@purc.de&gt;&#13;
-Link: https://github.com/purcaholic/mpDynamicContent&#13;
+Author: Murat Purç &#13;
+Link: https://github.com/muratpurc/mpDynamicContent&#13;
 Version: 0.1.3</description><type>content</type><alias>mp_dynamic_content</alias></module>
