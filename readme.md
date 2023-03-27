@@ -18,6 +18,17 @@ Es ist auch möglich, zu jedem Content-Typ ein Template auszuwählen.
 
 ----
 
+## Voraussetzungen
+
+- CONTENIDO >= 4.10.*
+- PHP >= 7.0 und PHP < 8.2
+- CONTENIDO Plugin "Mp Dev Tools"
+
+Das benötigte Plugin (Package "mp_dev_tools.zip") von der [GitHub-Seite](https://github.com/muratpurc/CONTENIDO-plugin-mp_dev_tools/releases)
+herunterladen und in CONTENIDO installieren.
+
+----
+
 ## Installation/Verwendung
 
 Die im Modulpackage enthaltenen Dateien/Sourcen sind wie im Folgenden beschrieben
@@ -117,16 +128,8 @@ Jeder Content-Typ Eintrag enthält 4 konfigurierbare Felder.
 
 ## mpDynamicContent Modul Links
 
-CONTENIDO Forum unter "CONTENIDO 4.9 -> Module und Plugins":
-http://forum.contenido.org/viewtopic.php?t=34753
+- [GitHub-Seite](https://github.com/muratpurc/mpDynamicContent)
 
-CONTENIDO Forum unter "CONTENIDO 4.10 -> Module und Plugins":
-https://forum.contenido.org/viewtopic.php?t=43770
+- [CONTENIDO Forum unter "CONTENIDO 4.10 -> Module und Plugins"](https://forum.contenido.org/viewtopic.php?t=43770)
 
-----
-
-## Schlussbemerkung
-
-Benutzung des Moduls auf eigene Gefahr!
-
-Murat Purç, murat@purc.de
+- [CONTENIDO Forum unter "CONTENIDO 4.9 -> Module und Plugins"](http://forum.contenido.org/viewtopic.php?t=34753)
