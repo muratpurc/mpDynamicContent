@@ -4,23 +4,7 @@
 
     {if $isBackendEditMode == true}
         {* Load/Output styles only once in current page *}
-        {if $jQueryUIStylesLoaded == false}
-            {* This is a special treatment for CONTENIDO < 4.9.3 *}
-            {if $versionLowerThan493 == true}
-
-                <script type="text/javascript">
-                (function($) {
-                    // NOTE: There is no proper way to detect if required CSS is loaded and this
-                    // should not be done on module level. Just load it, in worst case it will
-                    // be loaded multiple times...
-                    if ($('#jquery_ui_styles').length === 0) {
-                        $('head').append('<link rel="stylesheet" id="jquery_ui_styles" href="{$backendHtmlPath}styles/jquery/jquery-ui.css" type="text/css" media="all" />');
-                    }
-                })(jQuery);
-                </script>
-
-            {/if}
-
+        {if isset($jQueryUIStylesLoaded) && $jQueryUIStylesLoaded == false}
             {literal}
 
             <style type="text/css">
@@ -130,7 +114,7 @@
             // ####################################################################
             // Functions
 
-            // Helper function to convert JSON to it's string representation
+            // Helper function to convert JSON to its string representation
             var _jsonStringify = typeof JSON !== 'undefined' ? JSON.stringify : function(obj) {
                 var arr = [];
                 $.each(obj, function(key, val) {
@@ -161,7 +145,7 @@
                     return;
                 }
 
-                // Stringify them and set form form fields value
+                // Stringify them and set form fields value
                 $types.val(_jsonStringify(entries));
                 //##console.log(entries);
                 //##console.log(_jsonStringify(entries));
@@ -269,15 +253,6 @@
         });
     }
 
-{* Use old loader for CONTENIDO < 4.9.3, since 4.9.3 we are able to load multiple dependencies and also css *}
-{if $versionLowerThan493 == true}
-
-    conLoadFile('{$backendHtmlPath}scripts/jquery/jquery-ui.js', function() {
-        initialize_mpDynamicContent_{$muid}();
-    }, window);
-
-{else}
-
     Con.Loader.get(['{$backendHtmlPath}scripts/jquery/jquery-ui.js', '{$backendHtmlPath}styles/jquery/jquery-ui.css'], function() {
         // TODO Murat Purç - Loader may call the callback twice!
         if ($.type(window.bMpDynamicContent_{$muid}_initialized) === 'undefined') {
@@ -287,8 +262,6 @@
             });
         }
     }, window);
-
-{/if}
 
 })(jQuery);
 </script>

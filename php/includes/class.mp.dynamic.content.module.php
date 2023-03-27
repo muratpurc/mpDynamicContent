@@ -1,183 +1,87 @@
 <?php
 
-namespace Purc\MpDynamicContent;
-
-use \cApiArticleLanguage;
-use \cApiTypeCollection;
-use \cTypeGenerator;
-use \stdClass;
-use \SplFileObject;
-
 /**
  * CONTENIDO module class for mpDynamicContent
  *
- * @package     CONTENIDO_Modules
+ * @package     Module
  * @subpackage  mpDynamicContent
- * @author      Murat Purç <murat@purc.de>
- * @copyright   Copyright (c) 2013-2019 Murat Purç (http://www.purc.de)
- * @license     http://www.gnu.org/licenses/gpl-2.0.html - GNU General Public License, version 2
+ * @author      Murat Purç
+ * @copyright   Murat Purç it-solutions
+ * @license     GPL-2.0-or-later
+ * @link        https://www.purc.de
  */
 
-if (!defined('CON_FRAMEWORK')) {
-    die('Illegal call');
-}
+use CONTENIDO\Plugin\MpDevTools\Module\AbstractBase;
 
 /**
  * CONTENIDO module class for mpDynamicContent
  *
- * @property boolean debug
- * @property string name
- * @property int idmod
- * @property int container
- * @property \cDb db
- * @property array cfg
- * @property int idart
- * @property int client
- * @property array clientCfg
- * @property int lang
+ * @property cDb db
  * @property int idartlang
- * @property boolean isBackendEditMode
- * @property \cModuleHandler moduleHandler
- * @property \cApiPropertyCollection propertyColl
+ * @property cApiPropertyCollection propertyColl
  * @property string type  The Content-Type
  * @property int typeid
  * @property string[] supportedContentTypes
  * @property string[] notSupportedContentTypes
  */
-class Module {
-
-    /**
-     * Unique module id (module id + container)
-     * @var  string
-     */
-    protected $_uid = '';
+class MpDynamicContentModule extends AbstractBase
+{
 
     /**
      * Module properties structure.
      * Not all properties are covered here, some will be added via constructor!
      * @var  array
      */
-    protected $_properties = [
-        'debug' => false,
-        'name' => 'mpDynamicContent',
-        'idmod' => 0,
-        'container' => 0,
+    protected $properties = [
         'db' => null,
-        'cfg' => null,
-        'client' => 0,
-        'lang' => 0,
+        'idartlang' => 0,
+        'propertyColl' => null,
+        'type' => '',
+        'typeid' => 0,
+        'supportedContentTypes' => [],
+        'notSupportedContentTypes' => [],
     ];
 
     /**
      * Constructor, sets some properties
-     * @param array $options Associative options array, entries will be assigned
-     *                          to member variables.
-     * @throws \cDbException
-     * @throws \cException
+     * @param array $properties Properties array
+     *
+     * @throws cDbException
+     * @throws cException
      */
-    public function __construct(array $options) {
-        foreach ($options as $k => $v) {
-            $this->$k = $v;
-        }
+    public function __construct(array $properties)
+    {
+        parent::__construct('mp_dynamic_content', $properties);
 
-        $this->_validate();
+        $this->validate();
 
-        $this->_uid = $this->idmod . '_' . $this->container;
-
-        $this->typeid = (int) $this->_getProperty('typeid');
-    }
-
-    /**
-     * @param $name
-     * @return mixed|null
-     */
-    public function __get($name) {
-        return (isset($this->_properties[$name])) ? $this->_properties[$name] : null;
-    }
-
-    /**
-     * @param $name
-     * @param $value
-     */
-    public function __set($name, $value) {
-        $this->_properties[$name] = $value;
-    }
-
-    /**
-     * @param $name
-     * @return bool
-     */
-    public function __isset($name) {
-        return (isset($this->_properties[$name]));
-    }
-
-    /**
-     * @param $name
-     */
-    public function __unset($name) {
-        if (isset($this->_properties[$name])) {
-            unset($this->_properties[$name]);
-        }
+        $this->typeid = cSecurity::toInteger($this->_getProperty('typeid'));
     }
 
     /**
      * Validates module configuration/data
      */
-    protected function _validate() {
-        $this->debug = (bool) $this->debug;
-        $this->name = (string) $this->name;
-        $this->idmod = (int) $this->idmod;
-        $this->container = (int) $this->container;
-        $this->client = (int) $this->client;
-        $this->lang = (int) $this->lang;
-
+    protected function validate()
+    {
         $this->supportedContentTypes = explode(',', $this->supportedContentTypes);
         $this->notSupportedContentTypes = explode(',', $this->notSupportedContentTypes);
     }
 
     /**
-     * Returns the checked attribute sub string usable for checkboxes.
-     * @param  string  $name  Configuration item name
-     * @return  string
-     */
-    public function getCheckedAttribute($name) {
-        if (isset($this->$name) && '' !== $this->$name) {
-            return ' checked="checked"';
-        } else {
-            return '';
-        }
-    }
-
-    /**
-     * Returns the id attribute value by concatenating passed name with the module uid.
-     * @param  string  $name
-     * @return  string
-     */
-    public function getIdValue($name) {
-        return $name . '_' . $this->getUid();
-    }
-
-    /**
-     * Returns the module uid (module id + container).
-     * @return  string
-     */
-    public function getUid() {
-        return $this->_uid;
-    }
-
-    /**
-     * Saves the send content entries data structure
+     * Saves the send content entries data structure.
+     *
      * @param array $post $_POST array
-     * @throws \cDbException
-     * @throws \cException
-     * @throws \cInvalidArgumentException
+     * @throws cDbException
+     * @throws cException
+     * @throws cInvalidArgumentException
      */
-    public function saveContentEntries(array $post) {
-        $contentTypeIdField = 'contenttypeid-' . $this->getUid();
+    public function saveContentEntries(array $post)
+    {
+        $contentTypeIdField = 'contenttypeid-' . $this->getIdentifier();
         if (isset($post[$contentTypeIdField])) {
             $typeid = $post[$contentTypeIdField];
             $this->_setProperty('typeid', $typeid);
-            $this->typeid = (int) $typeid;
+            $this->typeid = cSecurity::toInteger($typeid);
         }
         $this->_printInfo($this->typeid, 'typeid');
 
@@ -185,29 +89,31 @@ class Module {
             return;
         }
 
-        $contentTypesField = 'contenttypes-' . $this->getUid();
+        $contentTypesField = 'contenttypes-' . $this->getIdentifier();
         if (isset($post[$contentTypesField])) {
-            $contentTypes = (string) $post[$contentTypesField];
+            $contentTypes = cSecurity::toString($post[$contentTypesField]);
             $this->_printInfo($contentTypes, 'saved $contentTypes');
             conSaveContentEntry($this->idartlang, $this->type, $this->typeid, $contentTypes);
         }
     }
 
     /**
-     * Returns the stored content entries data structure
+     * Returns the stored content entries data structure.
+     *
      * @param bool $asObject Flag to convert the structure to a plain object and return it back
      * @return string|object
-     * @throws \cDbException
-     * @throws \cException
+     * @throws cDbException
+     * @throws cException
      */
-    public function getStoredContentTypeContent($asObject = false) {
+    public function getStoredContentTypeContent(bool $asObject = false)
+    {
         if (!$this->typeid) {
             return ($asObject) ? new stdClass() : '';
         }
 
         // Get stored data
         $art = new cApiArticleLanguage();
-        $art->loadByArticleAndLanguageId($this->idart, $this->lang);
+        $art->loadByArticleAndLanguageId($this->articleId, $this->languageId);
         $content = (string) $art->getContent($this->type, $this->typeid);
 
         if ($asObject) {
@@ -218,11 +124,13 @@ class Module {
     }
 
     /**
-     * Converts the given JSON string to a plain object (stdClass)
-     * @param  string  $str
+     * Converts the given JSON string to a plain object (stdClass).
+     *
+     * @param  string|object|stdClass  $str
      * @return  stdClass
      */
-    public function jsonStringToObject($str) {
+    public function jsonStringToObject($str): stdClass
+    {
         if (!empty($str)) {
             $str = @json_decode($str);
             if (!is_object($str)) {
@@ -240,12 +148,14 @@ class Module {
     /**
      * Returns list of supported Content-Types.
      * Returns either entries defined in property $this->supportedContentTypes or all Content-Types.
+     *
      * @return array
-     * @throws \cDbException
-     * @throws \cException
-     * @throws \cInvalidArgumentException
+     * @throws cDbException
+     * @throws cException
+     * @throws cInvalidArgumentException
      */
-    public function getSupportedContentTypes() {
+    public function getSupportedContentTypes(): array
+    {
         $contentTypes = [];
         $supported = $this->supportedContentTypes;
         $notSupported = $this->notSupportedContentTypes;
@@ -267,10 +177,11 @@ class Module {
      * Loops through stored Content-Types entries data structure and generates the
      * cms tag for each entry.
      * @return  array
-     * @throws \cDbException
-     * @throws \cException
+     * @throws cDbException
+     * @throws cException
      */
-    public function getContentTypeData() {
+    public function getContentTypeData(): array
+    {
         if (!$this->typeid) {
             return [];
         }
@@ -292,7 +203,7 @@ class Module {
                 'label' => $item->label,
                 'userdefined' => stripslashes($item->userdefined),
                 'online' => isset($item->online) ? $item->online : 1,
-                'template' => $this->moduleHandler->getTemplatePath($item->template),
+                'template' => $this->getModuleHandler()->getTemplatePath($item->template),
             ];
             $addData = $this->_getAdditionalContentTypeProperties($item->type, $this->typeid + $counter);
             if (count($addData) > 0) {
@@ -310,12 +221,13 @@ class Module {
      * @param  string  $sortBy  Name of property to sort by, either 'description' or 'template'.
      * @return  array
      */
-    public function getTemplates($sortBy = 'description') {
+    public function getTemplates(string $sortBy = 'description'): array
+    {
         $sortBy = (in_array($sortBy, ['description', 'template'])) ? $sortBy : 'description';
         $templates = [];
 
-        $files = $this->moduleHandler->getAllFilesFromDirectory('template');
-        $templatesPath = $this->moduleHandler->getTemplatePath();
+        $files = $this->getModuleHandler()->getAllFilesFromDirectory('template');
+        $templatesPath = $this->getModuleHandler()->getTemplatePath();
         foreach ($files as $file) {
             $parts = pathinfo($file);
             if ('type.' === substr($parts['basename'], 0, 5)) {
@@ -343,14 +255,16 @@ class Module {
     /**
      * Collects additional properties for Content-Types.
      * At the moment it deals only with CMS_IMGEDITOR, gets related CMS_IMG and CMS_IMGDESCR
-     * Content-Types, extracts the information and returns them back
+     * Content-Types, extracts the information and returns them back.
+     *
      * @param string $type
-     * @param string $typeid
+     * @param int $typeid
      * @return  array
-     * @throws \cDbException
-     * @throws \cException
+     * @throws cDbException
+     * @throws cException
      */
-    protected function _getAdditionalContentTypeProperties($type, $typeid) {
+    protected function _getAdditionalContentTypeProperties(string $type, int $typeid): array
+    {
         $addData = [];
 
         // Special treatment for Content-Type CMS_IMGEDITOR!
@@ -361,7 +275,7 @@ class Module {
             $img = $typeGen->getGeneratedCmsTag('CMS_IMG', $typeid);
             if (!empty($img)) {
                 $imgDescr = $typeGen->getGeneratedCmsTag('CMS_IMGDESCR', $typeid);
-                $file = str_replace($this->clientCfg['upl']['htmlpath'], $this->clientCfg['upl']['path'], $img);
+                $file = str_replace($this->cfgClient[$this->clientId]['upl']['htmlpath'], $this->cfgClient[$this->clientId]['upl']['path'], $img);
                 $dimensions = getimagesize($file);
 
                 $addData = [
@@ -377,12 +291,14 @@ class Module {
     }
 
     /**
-     * Sorts the template list by the sortBy parameter
+     * Sorts the template list by the sortBy parameter.
+     *
      * @param array $templates
      * @param string $sortBy
      * @return array
      */
-    protected function _sortTemplates(array $templates, $sortBy) {
+    protected function _sortTemplates(array $templates, string $sortBy): array
+    {
         $arrSort = [];
         foreach ($templates as $p => $tpl) {
             $arrSort[$p] = $tpl[$sortBy];
@@ -395,34 +311,40 @@ class Module {
 
     /**
      * Returns the module property by its name.
+     *
      * @param string $name Property name
      * @param string $default Default value
      * @return  mixed
-     * @throws \cDbException
-     * @throws \cException
+     * @throws cDbException
+     * @throws cException
      */
-    protected function _getProperty($name, $default = '') {
-        return $this->propertyColl->getValue('idmod', $this->idmod, 'container_' . $this->container , $name, $default);
+    protected function _getProperty(string $name, string $default = '')
+    {
+        return $this->propertyColl->getValue('idmod', $this->moduleId, 'container_' . $this->containerNumber , $name, $default);
     }
 
     /**
      * Sets the module property by its name.
+     *
      * @param string $name Property name
      * @param string $value Value
-     * @throws \cDbException
-     * @throws \cException
-     * @throws \cInvalidArgumentException
+     * @throws cDbException
+     * @throws cException
+     * @throws cInvalidArgumentException
      */
-    protected function _setProperty($name, $value) {
-        $this->propertyColl->setValue('idmod', $this->idmod, 'container_' . $this->container , $name, $value);
+    protected function _setProperty(string $name, string $value)
+    {
+        $this->propertyColl->setValue('idmod', $this->moduleId, 'container_' . $this->containerNumber , $name, $value);
     }
 
     /**
-     * Simple debugger, prints preformatted text, if debugging is enabled
+     * Simple debugger, prints preformatted text, if debugging is enabled.
+     *
      * @param  mixed  $var
-     * @param  mixed  $label
+     * @param  string  $label
      */
-    protected function _printInfo($var, $label = '') {
+    protected function _printInfo($var, string $label = '')
+    {
         if (!$this->debug) {
             return;
         }
@@ -435,4 +357,5 @@ class Module {
             echo "<pre>{$label}{$var}</pre>";
         }
     }
+
 }
