@@ -50,7 +50,7 @@ In der Editoransicht des Artikels die gewünschten Optionen setzen.
 Mit folgender Mandanten- oder Systemeinstellung kann man die unterstützten
 Content-Typen konfigurieren. Mehrere Werte sind mit Komma zu trennen:
 ```
-Typ:  mp_dynamic_content
+Typ:  module_mp_dynamic_content
 Name: supported_content_types
 Wert: CMS_HEAD,CMS_HTML,CMS_HTMLHEAD,CMS_IMGEDITOR,CMS_LINKEDITOR
 ```
