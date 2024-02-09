@@ -21,7 +21,7 @@ Es ist auch möglich, zu jedem Content-Typ ein Template auszuwählen.
 ## Voraussetzungen
 
 - CONTENIDO >= 4.10.*
-- PHP >= 7.0 und PHP < 8.2
+- PHP >= 7.1 und PHP < 8.2
 - CONTENIDO Plugin "Mp Dev Tools"
 
 Das benötigte Plugin (Package "mp_dev_tools.zip") von der [GitHub-Seite](https://github.com/muratpurc/CONTENIDO-plugin-mp_dev_tools/releases)
