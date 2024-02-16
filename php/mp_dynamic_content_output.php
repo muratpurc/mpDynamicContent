@@ -35,8 +35,12 @@
         'type' => 'CMS_TEXT', // The Content-Type which contains the Content-Types structure
         'typeid' => 0,  // Will be set in module!
 
-        // (string) Comma separated list of content types, e. g. 'CMS_HTMLHEAD,CMS_HTML,CMS_IMGEDITOR'
-        'supportedContentTypes' => (string) getEffectiveSetting('module_mp_dynamic_content', 'supported_content_types', 'CMS_HEAD,CMS_HTML,CMS_HTMLHEAD,CMS_IMGEDITOR,CMS_LINKEDITOR'),
+        // (string) Comma separated list of content types, e.g. 'CMS_HTMLHEAD,CMS_HTML,CMS_IMGEDITOR'
+        'supportedContentTypes' => (string) getEffectiveSetting(
+            'module_mp_dynamic_content',
+            'supported_content_types',
+            'CMS_HEAD,CMS_HTML,CMS_HTMLHEAD,CMS_IMGEDITOR,CMS_LINKEDITOR'
+        ),
 
         // (string) Comma separated list of not supported content types
         'notSupportedContentTypes' => 'CMS_IMG,CMS_IMGDESCR,CMS_LINK,CMS_LINKTARGET,CMS_LINKDESCR',
